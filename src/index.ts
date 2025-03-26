@@ -159,7 +159,10 @@ const server = new Server(
             },
             resources: {},
         },
+        instructions: "You can interact with an JetBrains IntelliJ IDE and its features through this MCP (Model Context Protocol) server. The server provides access to various IDE tools and functionalities. " +
+            "All requests should be formatted as JSON objects according to the Model Context Protocol specification."
     },
+
 );
 
 /**
