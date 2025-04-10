@@ -46,6 +46,17 @@ To enable logging add:
 }
 ```
 
+## Troubleshooting
+
+### MacOS: Plugin Unable to Detect Node.js Installed via nvm
+**Problem:** On MacOS, if you have Node.js installed through nvm (Node Version Manager), the MCP Server Plugin might be unable to detect your Node.js installation.
+
+**Solution:** Create a symbolic link in `/usr/local/bin` pointing to your nvm npx executable:
+```bash
+which npx &>/dev/null && sudo ln -sf "$(which npx)" /usr/local/bin/npx
+```
+This one-liner checks if npx exists in your path and creates the necessary symbolic link with proper permissions.
+
 ## How to build
 1. Tested on macOS
 2. `brew install node pnpm`
