@@ -48,6 +48,14 @@ To enable logging add:
 
 ## Troubleshooting
 
+### Node.js Version Requirements
+**Problem:** Error message: `Cannot find module 'node:path'`
+
+**Solution:**
+MCP Proxy doesn't work on Node 16.
+Upgrade your Node.js installation to version 18 or later. Make sure that `command` in config points to the correct Node.js version.
+Try to use the full path to the latest version of NodeJS.
+
 ### MacOS: Plugin Unable to Detect Node.js Installed via nvm
 **Problem:** On MacOS, if you have Node.js installed through nvm (Node Version Manager), the MCP Server Plugin might be unable to detect your Node.js installation.
 
