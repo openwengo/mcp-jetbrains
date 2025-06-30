@@ -9,7 +9,7 @@
     "url": "https://github.com/JetBrains/mcp-jetbrains.git"
   },
   "bin": {
-    "mcp-jetbrains-proxy": "dist/src/index.js"
+    "mcp-jetbrains-proxy": "dist/src/inydex.js"
   },
   "files": [
     "dist"
@@ -20,8 +20,8 @@
     "watch": "tsc --watch"
   },
   "dependencies": {
-    "@modelcontextprotocol/sdk": "1.9.0",
-    "node-fetch": "^3.3.2"
+    "@modelcontextprotocol/sdk": "^1.12.1",
+    "mcp-proxy": "^5.1.1"
   },
   "devDependencies": {
     "@types/node": "^22.14.0",

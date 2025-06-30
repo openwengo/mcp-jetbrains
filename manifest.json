@@ -1,0 +1,48 @@
+{
+  "dxt_version": "0.1",
+  "name": "@jetbrains/mcp-proxy",
+  "version": "1.0.0",
+  "description": "A MCP proxy to redirect requests to JetBrains IDEs",
+  "author": {
+    "name": "JetBrains"
+  },
+  "homepage": "https://www.jetbrains.com/",
+  "documentation": "https://github.com/JetBrains/mcp-server-plugin",
+  "server": {
+    "type": "node",
+    "entry_point": "dist/src/index.js",
+    "mcp_config": {
+      "command": "node",
+      "args": [
+        "${__dirname}/dist/src/index.js"
+      ],
+      "env": {
+        "IDE_PORT": "${user_config.IDE_PORT}"
+      }
+    }
+  },
+  "tools": [
+  ],
+  "tools_generated": true,
+  "user_config": {
+    "IDE_PORT": {
+      "type": "number",
+      "title": "Port of the IDE.",
+      "description": "If you're running multiple IDEs with MCP server and want to connect to the specific one, specify the port.",
+      "required": true,
+      "sensitive": false,
+      "min": 0,
+      "max": 100000
+    }
+  },
+  "keywords": [
+    "jetbrains",
+    "ide",
+    "coding"
+  ],
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/JetBrains/mcp-jetbrains.git"
+  }
+}
