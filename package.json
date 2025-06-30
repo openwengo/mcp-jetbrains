@@ -9,7 +9,7 @@
     "url": "https://github.com/JetBrains/mcp-jetbrains.git"
   },
   "bin": {
-    "mcp-jetbrains-proxy": "dist/src/inydex.js"
+    "mcp-jetbrains-proxy": "dist/src/index.js"
   },
   "files": [
     "dist"
