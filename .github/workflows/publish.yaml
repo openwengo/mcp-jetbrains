@@ -3,12 +3,24 @@ name: Build and Publish DXT
 on:
   push:
     branches: [ dxt ]
+  workflow_dispatch:  # Allows manual triggering
+    inputs:
+      create_release:
+        description: 'Create a GitHub release'
+        required: false
+        default: false
+        type: boolean
+      release_version:
+        description: 'Release version (e.g., v1.0.0)'
+        required: false
+        default: ''
+        type: string
 
 jobs:
   build:
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      contents: write
       id-token: write
     steps:
       - uses: actions/checkout@v4
@@ -28,8 +40,39 @@ jobs:
       - name: Pack DXT
         run: dxt pack
 
-      - name: Upload DXT package
+      - name: Upload DXT package (artifact)
         uses: actions/upload-artifact@v4
         with:
           name: mcp-jetbrains-dxt
           path: mcp-jetbrains.dxt
+
+      - name: Determine release tag
+        id: release_info
+        if: github.event.inputs.create_release == 'true' || github.event_name == 'push'
+        run: |
+          if [ "${{ github.event.inputs.release_version }}" != "" ]; then
+            TAG="dxt-${{ github.event.inputs.release_version }}"
+          else
+            TIMESTAMP=$(date +"%Y%m%d-%H%M%S")
+            TAG="dxt-auto-${TIMESTAMP}"
+          fi
+          echo "tag=${TAG}" >> $GITHUB_OUTPUT
+          echo "Release tag: ${TAG}"
+
+      - name: Create Release
+        if: steps.release_info.outputs.tag != ''
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.release_info.outputs.tag }}
+          name: "DXT Release ${{ steps.release_info.outputs.tag }}"
+          body: |
+            DXT build from branch `dxt`
+            
+            **Commit:** ${{ github.sha }}
+            **Author:** ${{ github.actor }}
+            **Manual Release:** ${{ github.event.inputs.create_release == 'true' }}
+            
+            Download the `mcp-jetbrains.dxt` file below.
+          files: mcp-jetbrains.dxt
+          prerelease: true
+          generate_release_notes: true
