@@ -3,6 +3,7 @@ name: Build and Publish DXT
 on:
   push:
     branches: [ dxt ]
+    tags: [ 'dxt-v*' ]  # Add this line
   workflow_dispatch:  # Allows manual triggering
     inputs:
       create_release:
