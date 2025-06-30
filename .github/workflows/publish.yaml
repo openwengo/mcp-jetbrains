@@ -31,5 +31,5 @@ jobs:
       - name: Upload DXT package
         uses: actions/upload-artifact@v4
         with:
-          name: jetbrainsMcpProxy-dxt
-          path: jetbrainsMcpProxy.dxt
+          name: mcp-jetbrains-dxt
+          path: mcp-jetbrains.dxt
