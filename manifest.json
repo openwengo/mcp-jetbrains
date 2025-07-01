@@ -8,6 +8,7 @@
   },
   "homepage": "https://www.jetbrains.com/",
   "documentation": "https://github.com/JetBrains/mcp-server-plugin",
+  "icon": "assets/icon.png",
   "server": {
     "type": "node",
     "entry_point": "dist/src/index.js",

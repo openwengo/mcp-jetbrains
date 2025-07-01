@@ -13,3 +13,10 @@ Provide port specified in: _Settings | Tools | MCP Server_
 * Check Claude Desktop has version 0.11.6+
 * After changing port in settings you have to restart Claude 
 * Built-in Node might not work, switch to local in _Claude Client | Preferences | Extensions | Use Built-in Node.js for MCP_
+
+## Developer guide
+To publish new release:
+```
+git tag dxt-v1.0.2
+git push origin dxt-v1.0.2
+```
