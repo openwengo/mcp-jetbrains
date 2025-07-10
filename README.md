@@ -1,7 +1,21 @@
 [![official JetBrains project](http://jb.gg/badges/incubator-flat-square.svg)](https://github.com/JetBrains#jetbrains-on-github)
 # JetBrains MCP Proxy Server
 
-The server proxies requests from client to JetBrains IDE.
+The server proxies requests from client to JetBrains IDE. It supports both **stdio** (traditional) and **HTTP Streamable** (modern) transport modes.
+
+## Transport Modes
+
+### Stdio Transport (Default)
+- Traditional command-line execution
+- Single client connection
+- Compatible with existing configurations
+
+### HTTP Streamable Transport (New)
+- Modern HTTP-based communication
+- Multiple concurrent client connections
+- Browser-compatible
+- Real-time notifications via Server-Sent Events
+- Session management
 
 ## Install MCP Server plugin
 
@@ -45,6 +59,7 @@ Optionally, you can add it to a file called `.vscode/mcp.json` in your workspace
 
 ## Usage with Claude Desktop
 
+### Stdio Mode (Default)
 To use this with Claude Desktop, add the following to your `claude_desktop_config.json`.
 The full path on MacOS: `~/Library/Application\ Support/Claude/claude_desktop_config.json`, on Windows: `%APPDATA%/Claude/claude_desktop_config.json`.
 
@@ -59,10 +74,61 @@ The full path on MacOS: `~/Library/Application\ Support/Claude/claude_desktop_co
 }
 ```
 
-After installing the MCP Server Plugin, and adding the JSON to the config file, restart Claude Desktop, and make sure the Jetbrains product is open before restarting Claude Desktop. 
+### HTTP Streamable Mode (New)
+For HTTP transport mode, use:
+
+```json
+{
+  "mcpServers": {
+    "jetbrains": {
+      "command": "npx",
+      "args": ["-y", "@jetbrains/mcp-proxy"],
+      "env": {
+        "TRANSPORT_MODE": "http",
+        "HTTP_PORT": "3000",
+        "HTTP_HOST": "127.0.0.1"
+      }
+    }
+  }
+}
+```
+
+Or use the direct HTTP URL (requires server to be running separately):
+
+```json
+{
+  "mcpServers": {
+    "jetbrains": {
+      "url": "http://localhost:3000/mcp"
+    }
+  }
+}
+```
+
+After installing the MCP Server Plugin, and adding the JSON to the config file, restart Claude Desktop, and make sure the Jetbrains product is open before restarting Claude Desktop.
 
 ## Configuration
 
+### Transport Mode
+Set the transport mode using the `TRANSPORT_MODE` environment variable:
+- `stdio` (default): Traditional command-line mode
+- `http`: HTTP Streamable transport mode
+
+### HTTP Mode Configuration
+When using HTTP mode, you can configure:
+
+```json
+"env": {
+  "TRANSPORT_MODE": "http",
+  "HTTP_PORT": "3000",
+  "HTTP_HOST": "0.0.0.0"
+}
+```
+
+- `HTTP_PORT`: Port for the HTTP server (default: 3000)
+- `HTTP_HOST`: Host address to bind to (default: 0.0.0.0)
+
+### IDE Connection Configuration
 If you're running multiple IDEs with MCP server and want to connect to the specific one, add to the MCP server configuration:
 ```json
 "env": {
@@ -70,19 +136,27 @@ If you're running multiple IDEs with MCP server and want to connect to the speci
 }
 ```
 
-By default, we connect to IDE on  127.0.0.1 but you can specify a different address/host:
+By default, we connect to IDE on 127.0.0.1 but you can specify a different address/host:
 ```json
 "env": {
   "HOST": "<host/address of IDE's built-in webserver>"
 }
 ```
 
+### Logging
 To enable logging add:
 ```json
 "env": {
   "LOG_ENABLED": "true"
 }
 ```
+
+### HTTP Mode Benefits
+- **Multiple Clients**: Support multiple concurrent MCP clients
+- **Browser Support**: Compatible with web-based MCP clients
+- **Real-time Notifications**: Server-sent events for tool changes
+- **Session Management**: Isolated sessions per client
+- **Health Monitoring**: Built-in health check endpoint at `/health`
 
 ## Troubleshooting
 
