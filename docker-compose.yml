@@ -1,0 +1,73 @@
+services:
+  # Main MCP Proxy service in HTTP mode
+  mcp-proxy:
+    build: .
+    container_name: jetbrains-mcp-proxy
+    network_mode: host
+    environment:
+      - TRANSPORT_MODE=http
+      - HTTP_PORT=3000
+      - HTTP_HOST=0.0.0.0
+      - LOG_ENABLED=false
+      - NODE_ENV=production
+      # IDE connection settings (uncomment and modify as needed)
+      # - IDE_PORT=63342
+      - HOST=127.0.0.1
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "node", "-e", "const http = require('http'); const req = http.request({host: '0.0.0.0', port: 3000, path: '/health', timeout: 2000}, (res) => process.exit(res.statusCode === 200 ? 0 : 1)); req.on('error', () => process.exit(1)); req.end();"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Development variant with logging enabled
+  mcp-proxy-dev:
+    build: .
+    container_name: jetbrains-mcp-proxy-dev
+    network_mode: host
+    environment:
+      - TRANSPORT_MODE=http
+      - HTTP_PORT=3001
+      - HTTP_HOST=0.0.0.0
+      - LOG_ENABLED=true
+      - NODE_ENV=development
+      # IDE connection settings for development
+      - HOST=127.0.0.1
+      # - IDE_PORT=63342
+    restart: unless-stopped
+    profiles:
+      - dev
+    healthcheck:
+      test: ["CMD", "node", "-e", "const http = require('http'); const req = http.request({host: '0.0.0.0', port: 3001, path: '/health', timeout: 2000}, (res) => process.exit(res.statusCode === 200 ? 0 : 1)); req.on('error', () => process.exit(1)); req.end();"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Stdio mode variant (for specific use cases)
+  mcp-proxy-stdio:
+    build: .
+    container_name: jetbrains-mcp-proxy-stdio
+    network_mode: host
+    environment:
+      - TRANSPORT_MODE=stdio
+      - LOG_ENABLED=true
+      - NODE_ENV=production
+      - HOST=127.0.0.1
+      # - IDE_PORT=63342
+    restart: unless-stopped
+    profiles:
+      - stdio
+    # Note: No health check for stdio mode as it doesn't expose HTTP endpoints
+
+# Networks (optional - for advanced setups)
+networks:
+  default:
+    name: mcp-proxy-network
+    driver: bridge
+
+# Volumes (optional - for persistent data if needed)
+volumes:
+  mcp-logs:
+    driver: local
